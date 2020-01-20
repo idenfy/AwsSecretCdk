@@ -1,0 +1,6 @@
+include *.txt
+include *.in
+
+recursive-include aws_secrets_manager *.py
+recursive-include aws_secrets_manager *.sh
+recursive-include aws_secrets_manager *.zip
