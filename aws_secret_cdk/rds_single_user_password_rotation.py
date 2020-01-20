@@ -4,7 +4,7 @@ import re
 from aws_cdk import core, aws_iam, aws_secretsmanager, aws_s3_deployment, aws_s3
 from aws_cdk.aws_lambda import Runtime, Code
 from aws_lambda.cloud_formation.lambda_aws_cdk import LambdaFunction
-from aws_secret.vpc_parameters import VPCParameters
+from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
 class RdsSingleUserPasswordRotation:

@@ -1,9 +1,9 @@
 from typing import Optional
 from aws_cdk import aws_secretsmanager, core, aws_kms
 from aws_cdk.aws_secretsmanager import SecretStringGenerator, ISecretAttachmentTarget
-from aws_secret.rds_single_user_password_rotation import RdsSingleUserPasswordRotation
-from aws_secret.secret_key import SecretKey
-from aws_secret.vpc_parameters import VPCParameters
+from aws_secret_cdk.rds_single_user_password_rotation import RdsSingleUserPasswordRotation
+from aws_secret_cdk.secret_key import SecretKey
+from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
 class RdsSecret:

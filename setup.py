@@ -7,7 +7,7 @@ with open('HISTORY.md') as history_file:
     HISTORY = history_file.read()
 
 setup(
-    name='aws_secret',
+    name='aws_secret_cdk',
     version='1.0.0',
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     packages=find_packages(exclude=['venv', 'test']),
@@ -27,7 +27,7 @@ setup(
     author='Laimonas Sutkus',
     author_email='laimonas.sutkus@gmail.com',
     keywords='AWS CDK CloudFormation SecretsManager Infrastructure Cloud DevOps',
-    url='https://github.com/laimonassutkus/AwsSecret',
+    url='https://github.com/laimonassutkus/AwsSecretCdk',
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
