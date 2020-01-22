@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.6
+Aws Lambda dependency update.
+
 #### 1.0.5
 Aws Lambda dependency update.
 
