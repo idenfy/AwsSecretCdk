@@ -76,7 +76,7 @@ class RdsSingleUserPasswordRotation:
         bucket_deployment = self.__convert(bucket_name + 'Deployment')
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        path = os.path.join(dir_path, '..', 'packages')
+        path = os.path.join(dir_path, 'packages')
         deployment_files = aws_s3_deployment.Source.asset(path)
 
         self.rotation_lambda_deployment_bukcet = aws_s3.Bucket(

@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.3
+Move packages into main package.
+
 #### 1.0.2
 Fix manifest file.
 
