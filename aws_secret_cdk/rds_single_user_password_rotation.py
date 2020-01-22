@@ -73,6 +73,7 @@ class RdsSingleUserPasswordRotation:
         )
 
         bucket_name = self.__convert(prefix + 'RdsSecretRotationLambdaDeploymentBucket')
+        bucket_deployment = self.__convert(bucket_name + 'Deployment')
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
         path = os.path.join(dir_path, '..', 'packages')
@@ -87,7 +88,7 @@ class RdsSingleUserPasswordRotation:
 
         self.rotation_lambda_deployment = aws_s3_deployment.BucketDeployment(
             scope=stack,
-            id=bucket_name,
+            id=bucket_deployment,
             destination_bucket=self.rotation_lambda_deployment_bukcet,
             sources=[deployment_files]
         )
