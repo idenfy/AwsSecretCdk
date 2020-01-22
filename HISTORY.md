@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.4
+Dont create Code class instance.
+
 #### 1.0.3
 Move packages into main package.
 

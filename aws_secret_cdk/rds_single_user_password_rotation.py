@@ -108,7 +108,7 @@ class RdsSingleUserPasswordRotation:
             security_groups=vpc_parameters.rotation_lambda_security_groups,
             subnets=vpc_parameters.rotation_lambda_subnets,
             vpc=vpc_parameters.rotation_lambda_vpc,
-            source_code=Code().from_bucket(
+            source_code=Code.from_bucket(
                 bucket=self.rotation_lambda_deployment_bukcet,
                 key=self.LAMBDA_BACKEND_DEPLOYMENT_PACKAGE,
             )
