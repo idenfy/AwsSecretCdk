@@ -82,7 +82,8 @@ class RdsSingleUserPasswordRotation:
             scope=stack,
             id=bucket_name,
             access_control=aws_s3.BucketAccessControl.PRIVATE,
-            bucket_name=bucket_name
+            bucket_name=bucket_name,
+            removal_policy=core.RemovalPolicy.DESTROY
         )
 
         self.rotation_lambda_deployment = aws_s3_deployment.BucketDeployment(

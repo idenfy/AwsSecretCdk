@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.8
+Add S3 removal policy.
+
 #### 1.0.7
 Don't use managed policies.
 
