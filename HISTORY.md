@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.7
+Don't use managed policies.
+
 #### 1.0.6
 Aws Lambda dependency update.
 

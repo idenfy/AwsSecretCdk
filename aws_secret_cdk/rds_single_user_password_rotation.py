@@ -42,6 +42,9 @@ class RdsSingleUserPasswordRotation:
                                 'ec2:AttachNetworkInterface',
                                 'ec2:DetachNetworkInterface',
                                 'ec2:DescribeNetworkInterfaces',
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents",
                             ],
                             effect=aws_iam.Effect.ALLOW,
                             resources=['*']
@@ -66,10 +69,6 @@ class RdsSingleUserPasswordRotation:
                     ]
                 )
             },
-            managed_policies=[
-                aws_iam.ManagedPolicy.from_aws_managed_policy_name('AWSLambdaBasicExecutionRole'),
-                aws_iam.ManagedPolicy.from_aws_managed_policy_name('AWSLambdaVPCAccessExecutionRole'),
-            ]
         )
 
         bucket_name = self.__convert(prefix + 'RdsSecretRotationLambdaDeploymentBucket')
