@@ -1,5 +1,8 @@
 # Release history
 
+#### 1.0.9
+Add secrets manager as a valid principal to invoke rotation lambda.
+
 #### 1.0.8
 Add S3 removal policy.
 

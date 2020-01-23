@@ -30,7 +30,8 @@ class RdsSingleUserPasswordRotation:
             role_name=prefix + 'RdsSecretRotationLambdaRole',
             assumed_by=aws_iam.CompositePrincipal(
                 aws_iam.ServicePrincipal("lambda.amazonaws.com"),
-            ),
+                aws_iam.ServicePrincipal("secretsmanager.amazonaws.com"),
+        ),
             inline_policies={
                 prefix + 'RdsSecretRotationLambdaPolicy': aws_iam.PolicyDocument(
                     statements=[
