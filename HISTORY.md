@@ -1,5 +1,8 @@
 # Release history
 
+#### 2.0.3
+Consistent naming.
+
 #### 2.0.2
 Add docstrings.
 

@@ -7,7 +7,7 @@ class SecretKey:
     """
     def __init__(
             self,
-            scope: core.Construct,
+            stack: core.Stack,
             prefix: str,
     ):
         """
@@ -17,7 +17,7 @@ class SecretKey:
         :param prefix: Prefix for KMS name.
         """
         self.__kms_key = aws_kms.Key(
-            scope=scope,
+            scope=stack,
             id=prefix + 'SecretEncryptionKey',
             alias=prefix + 'SecretEncryptionKey',
             description=f'Key used to encrypt {prefix} secret.',
