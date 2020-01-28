@@ -8,6 +8,9 @@ from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
 class RdsSingleUserPasswordRotation:
+    """
+    Class which creates a lambda function responsible for RDS single user secret (password) rotation.
+    """
     LAMBDA_BACKEND_DEPLOYMENT_PACKAGE = 'SecretsManagerRDSSingleUserRotation.zip'
 
     def __init__(
@@ -21,11 +24,12 @@ class RdsSingleUserPasswordRotation:
         """
         Constructor.
 
-        :param stack:
-        :param prefix:
-        :param secret:
-        :param kms_key:
-        :param vpc_parameters:
+        :param stack: A stack in which resources should be created.
+        :param prefix: A prefix to give for every resource.
+        :param secret: A secret instance which the lambda function should be able to access.
+        :param kms_key: Custom or managed KMS key for secret encryption which the
+        lambda function should be able to access.
+        :param vpc_parameters: VPC parameters for resource (e.g. lambda rotation function) configuration.
         """
         self.rotation_lambda_role = aws_iam.Role(
             scope=stack,
@@ -38,6 +42,8 @@ class RdsSingleUserPasswordRotation:
             inline_policies={
                 prefix + 'RdsSecretRotationLambdaPolicy': aws_iam.PolicyDocument(
                     statements=[
+                        # Secrets are KMS encrypted.
+                        # Therefore the lambda function should be able to get this value.
                         aws_iam.PolicyStatement(
                             actions=[
                                 'kms:GetSecretValue',
@@ -45,6 +51,8 @@ class RdsSingleUserPasswordRotation:
                             effect=aws_iam.Effect.ALLOW,
                             resources=[kms_key.key_arn]
                         ),
+                        # We enforce lambdas to run in a VPC.
+                        # Therefore lambdas need some network interface permissions.
                         aws_iam.PolicyStatement(
                             actions=[
                                 'ec2:CreateNetworkInterface',
@@ -60,6 +68,7 @@ class RdsSingleUserPasswordRotation:
                             effect=aws_iam.Effect.ALLOW,
                             resources=['*']
                         ),
+                        # Lambda needs to call secrets manager to get secret value in order to update database password.
                         aws_iam.PolicyStatement(
                             actions=[
                                 "secretsmanager:DescribeSecret",
@@ -70,6 +79,8 @@ class RdsSingleUserPasswordRotation:
                             effect=aws_iam.Effect.ALLOW,
                             resources=[secret.secret_arn]
                         ),
+                        # Not exactly sure about this one.
+                        # Despite that, this policy does not impose any security risks.
                         aws_iam.PolicyStatement(
                             actions=[
                                 "secretsmanager:GetRandomPassword"
@@ -97,6 +108,7 @@ class RdsSingleUserPasswordRotation:
             removal_policy=core.RemovalPolicy.DESTROY
         )
 
+        # Deploy lambda function source code.
         self.rotation_lambda_deployment = aws_s3_deployment.BucketDeployment(
             scope=stack,
             id=bucket_deployment,
@@ -104,6 +116,7 @@ class RdsSingleUserPasswordRotation:
             sources=[deployment_files]
         )
 
+        # Create a lambda function responsible for rds password rotation.
         self.rotation_lambda_function = LambdaFunction(
             scope=stack,
             prefix=prefix,
@@ -125,6 +138,8 @@ class RdsSingleUserPasswordRotation:
             )
         ).lambda_function
 
+        # Add some dependencies to ensure the right creation order.
+        # Mostly this is not necessary because CloudFormation is smart enough.
         self.rotation_lambda_function.node.add_dependency(self.rotation_lambda_deployment_bukcet)
         self.rotation_lambda_function.node.add_dependency(self.rotation_lambda_deployment)
         self.rotation_lambda_function.node.add_dependency(self.rotation_lambda_role)

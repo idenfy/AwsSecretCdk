@@ -1,5 +1,8 @@
 # Release history
 
+#### 2.0.2
+Add docstrings.
+
 #### 2.0.1
 Fix target types and target arns.
 

@@ -3,6 +3,9 @@ from aws_cdk.aws_ec2 import Vpc, SecurityGroup, Subnet
 
 
 class VPCParameters:
+    """
+    Parameters class for resources configuration to run in a VPC.
+    """
     def __init__(
             self,
             rotation_lambda_vpc: Vpc,

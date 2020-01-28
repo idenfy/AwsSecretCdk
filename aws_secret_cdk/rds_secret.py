@@ -9,6 +9,9 @@ from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
 class RdsSecret:
+    """
+    Class which creates a whole infrastructure around secret management.
+    """
     def __init__(
             self,
             stack: core.Stack,
@@ -20,12 +23,13 @@ class RdsSecret:
         """
         Constructor.
 
-        :param stack:
-        :param prefix:
-        :param vpc_parameters:
-        :param database:
-        :param kms_key:
+        :param stack: A stack in which resources should be created.
+        :param prefix: A prefix to give for every resource.
+        :param vpc_parameters: VPC parameters for resource (e.g. lambda rotation function) configuration.
+        :param database: A database instance for which this secret should be applied.
+        :param kms_key: Custom or managed KMS key for secret encryption.
         """
+        # If KMS key is not present, create one.
         self.kms_key = kms_key or SecretKey(stack, prefix).get_kms_key()
 
         # This template is sent to a lambda function that executes secret rotation.
@@ -46,6 +50,7 @@ class RdsSecret:
         elif isinstance(database, aws_rds.CfnDBCluster):
             template['dbname'] = database.database_name
 
+        # Create a secret instance.
         self.secret = aws_secretsmanager.Secret(
             scope=stack,
             id=prefix + 'RdsSecret',
@@ -61,6 +66,7 @@ class RdsSecret:
         # Make sure database is fully deployed and configured before creating a secret for it.
         self.secret.node.add_dependency(database)
 
+        # Create a lambda function for secret rotation.
         self.secret_rotation = RdsSingleUserPasswordRotation(
             stack=stack,
             prefix=prefix,
@@ -69,6 +75,7 @@ class RdsSecret:
             vpc_parameters=vpc_parameters
         )
 
+        # Make sure secrets manager can invoke this lambda function.
         self.sm_invoke_permission = aws_lambda.CfnPermission(
             scope=stack,
             id=prefix + 'SecretsManagerInvokePermission',
@@ -80,6 +87,7 @@ class RdsSecret:
         # Make sure lambda function is created before making its permissions.
         self.sm_invoke_permission.node.add_dependency(self.secret_rotation.rotation_lambda_function)
 
+        # Apply rotation for the secret instance.
         self.rotation_schedule = aws_secretsmanager.RotationSchedule(
             scope=stack,
             id=prefix + 'RotationSchedule',
@@ -93,8 +101,10 @@ class RdsSecret:
 
         # Instances and clusters have different arns.
         if isinstance(database, aws_rds.CfnDBInstance):
+            assert database.db_instance_identifier, 'Instance identifier must be specified.'
             target_arn = f'arn:aws:rds:eu-west-1:{stack.account}:db:{database.db_instance_identifier}'
         elif isinstance(database, aws_rds.CfnDBCluster):
+            assert database.db_cluster_identifier, 'Cluster identifier must be specified.'
             target_arn = f'arn:aws:rds:eu-west-1:{stack.account}:cluster:{database.db_cluster_identifier}'
         else:
             raise TypeError('Unsupported DB type.')
@@ -107,6 +117,7 @@ class RdsSecret:
         else:
             raise TypeError('Unsupported DB type.')
 
+        # Attach the secret instance to the desired database.
         self.target_db_attachment = aws_secretsmanager.CfnSecretTargetAttachment(
             scope=stack,
             id=prefix + 'TargetRdsAttachment',
