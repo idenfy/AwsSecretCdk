@@ -1,5 +1,8 @@
 # Release history
 
+#### 2.0.1
+Fix target types and target arns.
+
 #### 2.0.0
 General bug fixes. Add permission for KMS key resource. Add secret template.
 

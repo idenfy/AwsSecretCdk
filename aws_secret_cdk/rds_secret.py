@@ -91,10 +91,26 @@ class RdsSecret:
         # Make sure invoke permission for secrets manager is created before creating a schedule.
         self.rotation_schedule.node.add_dependency(self.sm_invoke_permission)
 
+        # Instances and clusters have different arns.
+        if isinstance(database, aws_rds.CfnDBInstance):
+            target_arn = f'arn:aws:rds:eu-west-1:{stack.account}:db:{database.db_instance_identifier}'
+        elif isinstance(database, aws_rds.CfnDBCluster):
+            target_arn = f'arn:aws:rds:eu-west-1:{stack.account}:cluster:{database.db_cluster_identifier}'
+        else:
+            raise TypeError('Unsupported DB type.')
+
+        # Instances and clusters should have different attachment types.
+        if isinstance(database, aws_rds.CfnDBInstance):
+            target_type = 'AWS::RDS::DBInstance'
+        elif isinstance(database, aws_rds.CfnDBCluster):
+            target_type = 'AWS::RDS::DBCluster'
+        else:
+            raise TypeError('Unsupported DB type.')
+
         self.target_db_attachment = aws_secretsmanager.CfnSecretTargetAttachment(
             scope=stack,
             id=prefix + 'TargetRdsAttachment',
             secret_id=self.secret.secret_arn,
-            target_id=database.logical_id,
-            target_type=aws_secretsmanager.AttachmentTargetType.CLUSTER.value
+            target_id=target_arn,
+            target_type=target_type
         )
