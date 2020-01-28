@@ -1,5 +1,8 @@
 # Release history
 
+#### 2.0.0
+General bug fixes. Add permission for KMS key resource. Add secret template.
+
 #### 1.0.9
 Add secrets manager as a valid principal to invoke rotation lambda.
 

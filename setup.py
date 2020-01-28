@@ -8,7 +8,7 @@ with open('HISTORY.md') as history_file:
 
 setup(
     name='aws_secret_cdk',
-    version='1.0.9',
+    version='2.0.0',
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     packages=find_packages(exclude=['venv', 'test']),
     description='Package to create a SecretsManager\'s secret with auto rotation.',
@@ -20,6 +20,7 @@ setup(
         'aws-cdk.aws_iam',
         'aws-cdk.aws_ec2',
         'aws-cdk.aws_lambda',
+        'aws-cdk.aws_rds',
         'aws-cdk.aws_secretsmanager',
         'aws-cdk.aws_s3_deployment',
         'aws-lambda>=2.1.2,<3.0.0'

@@ -1,7 +1,7 @@
 import os
 import re
 
-from aws_cdk import core, aws_iam, aws_secretsmanager, aws_s3_deployment, aws_s3
+from aws_cdk import core, aws_iam, aws_secretsmanager, aws_s3_deployment, aws_s3, aws_kms
 from aws_cdk.aws_lambda import Runtime, Code
 from aws_lambda.cloud_formation.lambda_aws_cdk import LambdaFunction
 from aws_secret_cdk.vpc_parameters import VPCParameters
@@ -15,13 +15,16 @@ class RdsSingleUserPasswordRotation:
             stack: core.Stack,
             prefix: str,
             secret: aws_secretsmanager.Secret,
+            kms_key: aws_kms.IKey,
             vpc_parameters: VPCParameters
     ) -> None:
         """
+        Constructor.
 
         :param stack:
         :param prefix:
         :param secret:
+        :param kms_key:
         :param vpc_parameters:
         """
         self.rotation_lambda_role = aws_iam.Role(
@@ -35,6 +38,13 @@ class RdsSingleUserPasswordRotation:
             inline_policies={
                 prefix + 'RdsSecretRotationLambdaPolicy': aws_iam.PolicyDocument(
                     statements=[
+                        aws_iam.PolicyStatement(
+                            actions=[
+                                'kms:GetSecretValue',
+                            ],
+                            effect=aws_iam.Effect.ALLOW,
+                            resources=[kms_key.key_arn]
+                        ),
                         aws_iam.PolicyStatement(
                             actions=[
                                 'ec2:CreateNetworkInterface',
