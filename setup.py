@@ -26,9 +26,9 @@ setup(
         'aws-lambda>=2.1.2,<3.0.0'
     ],
     author='Laimonas Sutkus',
-    author_email='laimonas.sutkus@gmail.com',
+    author_email='laimonas@idenfy.com',
     keywords='AWS CDK CloudFormation SecretsManager Infrastructure Cloud DevOps',
-    url='https://github.com/laimonassutkus/AwsSecretCdk',
+    url='https://github.com/idenfy/AwsSecret',
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
