@@ -19,6 +19,9 @@ and some other params. And that's it! You're good to go.
 This Cdk library assumes the following:
 - You have knowledge in AWS
 - You have knowledge in AWS CloudFormation and AWS CDK for creating infrastructure-as-a-code.
+- You have knowledge in AWS SSM (we strongly recommend watching this [Introduction](https://www.youtube.com/watch?v=Y3Gn_iP3FlE)).
+- You are using AWS CDK to manage your AWS infrastructure.
+- You are writing AWS CDK project with Python language.
 
 #### How to use
 
@@ -26,6 +29,7 @@ This Cdk library assumes the following:
 # Suppose you have a stack (core.Stack) or an app (core.App) which are constructs.
 from aws_cdk.core import Stack
 from aws_cdk.aws_ec2 import Vpc
+
 class MyStack(Stack):
     def __init__(self):
         super().__init__(...)
@@ -40,6 +44,7 @@ class MyStack(Stack):
         # Now simply create a secret with 30 day rotation.
         from aws_secret_cdk.rds_secret import RdsSecret
         from aws_secret_cdk.vpc_parameters import VPCParameters
+        
         self.rds_secret = RdsSecret(
             stack=self,
             prefix='MyResourcesPrefix',
