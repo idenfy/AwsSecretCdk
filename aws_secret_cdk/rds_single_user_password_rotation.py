@@ -93,7 +93,7 @@ class RdsSingleUserPasswordRotation:
             },
         )
 
-        bucket_name = self.__convert(prefix + 'RdsSecretRotationLambdaDeploymentBucket')
+        bucket_name = self.__convert(prefix + 'SecretRotationLambda')
         bucket_deployment = self.__convert(bucket_name + 'Deployment')
 
         dir_path = os.path.dirname(os.path.realpath(__file__))

@@ -1,5 +1,8 @@
 # Release history
 
+#### 3.0.0
+Shorten lambda bucket name.
+
 #### 2.0.3
 Consistent naming.
 
