@@ -1,5 +1,8 @@
 # Release history
 
+#### 3.0.1
+Update README.
+
 #### 3.0.0
 Shorten lambda bucket name.
 
