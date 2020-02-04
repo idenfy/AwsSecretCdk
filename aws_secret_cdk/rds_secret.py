@@ -3,8 +3,8 @@ import json
 from typing import Optional, Union
 from aws_cdk import aws_secretsmanager, core, aws_kms, aws_lambda, aws_rds
 from aws_cdk.aws_secretsmanager import SecretStringGenerator
+from aws_cdk.core import SecretValue
 from aws_secret_cdk.rds_single_user_password_rotation import RdsSingleUserPasswordRotation
-from aws_secret_cdk.secret_key import SecretKey
 from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
@@ -29,19 +29,16 @@ class RdsSecret:
         :param database: A database instance for which this secret should be applied.
         :param kms_key: Custom or managed KMS key for secret encryption.
         """
-        # If KMS key is not present, create one.
-        self.kms_key = kms_key or SecretKey(stack, prefix).get_kms_key()
-
         # This template is sent to a lambda function that executes secret rotation.
         # If you choose to change this template, make sure you change lambda
         # function source code too.
         template = {
-            'engine': database.engine,
+            'engine': 'mysql',
             'host': database.attr_endpoint_address,
             'username': database.master_username,
             'password': database.master_user_password,
             'dbname': None,
-            'port': database.port
+            'port': 3306
         }
 
         # Instances and clusters have different attributes.
@@ -55,7 +52,7 @@ class RdsSecret:
             scope=stack,
             id=prefix + 'RdsSecret',
             description=f'A secret for {prefix}.',
-            encryption_key=self.kms_key,
+            encryption_key=kms_key,
             generate_secret_string=SecretStringGenerator(
                 generate_string_key='password',
                 secret_string_template=json.dumps(template)
@@ -72,7 +69,8 @@ class RdsSecret:
             prefix=prefix,
             secret=self.secret,
             kms_key=kms_key,
-            vpc_parameters=vpc_parameters
+            vpc_parameters=vpc_parameters,
+            database=database
         )
 
         # Make sure secrets manager can invoke this lambda function.
@@ -125,3 +123,7 @@ class RdsSecret:
             target_id=target_arn,
             target_type=target_type
         )
+
+    @property
+    def password(self) -> SecretValue:
+        return self.secret.secret_value

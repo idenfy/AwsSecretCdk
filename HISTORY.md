@@ -1,5 +1,11 @@
 # Release history
 
+#### 4.0.0
+Do not enforce KMS CMKs. Use assets to deploy lambda function source code
+instead of S3 buckets. Use better prefixes. Refactor lambda function source code
+to support initial passwords on existing databases. Warning: loosened permissions.
+Next commit should fix them.
+
 #### 3.0.1
 Update README.
 
