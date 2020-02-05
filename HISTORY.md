@@ -1,5 +1,11 @@
 # Release history
 
+#### 5.0.0
+Restructure project having in mind that different types of rotations are 
+possible e.g. DynamoDB secret rotation, or RDS multi user secret rotation.
+Narrowed down the permissions required for rotation. With this version 
+an aws-secret-cdk package is fully functional and available to be used.
+
 #### 4.0.0
 Do not enforce KMS CMKs. Use assets to deploy lambda function source code
 instead of S3 buckets. Use better prefixes. Refactor lambda function source code

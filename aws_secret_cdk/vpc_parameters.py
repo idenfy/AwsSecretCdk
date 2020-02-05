@@ -15,9 +15,9 @@ class VPCParameters:
         """
         Constructor.
 
-        :param rotation_lambda_vpc: A VPC in which a secrets rotation lambda will be deployed to.
-        :param rotation_lambda_security_groups: Security groups to attach to a rotation lambda.
-        :param rotation_lambda_subnets: Subnets in which a rotation lambda can operate.
+        :param rotation_lambda_vpc: A VPC in which a secrets rotation lambda function will be deployed to.
+        :param rotation_lambda_security_groups: Security groups to attach to a rotation lambda function.
+        :param rotation_lambda_subnets: Subnets in which a rotation lambda function can operate.
         """
         self.rotation_lambda_vpc = rotation_lambda_vpc
         self.rotation_lambda_security_groups = rotation_lambda_security_groups

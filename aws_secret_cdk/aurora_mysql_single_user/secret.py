@@ -4,11 +4,12 @@ from typing import Optional, Union
 from aws_cdk import aws_secretsmanager, core, aws_kms, aws_lambda, aws_rds
 from aws_cdk.aws_secretsmanager import SecretStringGenerator
 from aws_cdk.core import SecretValue
-from aws_secret_cdk.rds_single_user_password_rotation import RdsSingleUserPasswordRotation
+from aws_secret_cdk.aurora_mysql_single_user.secret_rotation import SecretRotation
+from aws_secret_cdk.base_secret import BaseSecret
 from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
-class RdsSecret:
+class Secret(BaseSecret):
     """
     Class which creates a whole infrastructure around secret management.
     """
@@ -29,6 +30,8 @@ class RdsSecret:
         :param database: A database instance for which this secret should be applied.
         :param kms_key: Custom or managed KMS key for secret encryption.
         """
+        super().__init__()
+
         # This template is sent to a lambda function that executes secret rotation.
         # If you choose to change this template, make sure you change lambda
         # function source code too.
@@ -64,7 +67,7 @@ class RdsSecret:
         self.secret.node.add_dependency(database)
 
         # Create a lambda function for secret rotation.
-        self.secret_rotation = RdsSingleUserPasswordRotation(
+        self.secret_rotation = SecretRotation(
             stack=stack,
             prefix=prefix,
             secret=self.secret,

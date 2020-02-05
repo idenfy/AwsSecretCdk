@@ -5,14 +5,15 @@ from typing import Optional, Union
 from aws_cdk import core, aws_iam, aws_secretsmanager, aws_kms, aws_rds
 from aws_cdk.aws_lambda import Runtime, Code
 from aws_lambda.cloud_formation.lambda_aws_cdk import LambdaFunction
+from aws_secret_cdk.base_secret_rotation import BaseSecretRotation
 from aws_secret_cdk.vpc_parameters import VPCParameters
 
 
-class RdsSingleUserPasswordRotation:
+class SecretRotation(BaseSecretRotation):
     """
     Class which creates a lambda function responsible for RDS single user secret (password) rotation.
     """
-    LAMBDA_BACKEND_DEPLOYMENT_PACKAGE = 'SecretsManagerRDSSingleUserRotation'
+    LAMBDA_BACKEND_DEPLOYMENT_PACKAGE = 'package_src'
 
     def __init__(
             self,
@@ -33,8 +34,12 @@ class RdsSingleUserPasswordRotation:
         :param kms_key: Custom or managed KMS key for secret encryption which the
         lambda function should be able to access.
         """
+        super().__init__()
+
         self.__prefix = prefix + 'SecretRotation'
 
+        # Read more about the permissions required to successfully rotate a secret:
+        # https://docs.aws.amazon.com/secretsmanager/latest/userguide//rotating-secrets-required-permissions.html
         rotation_lambda_role_statements = [
             # We enforce lambdas to run in a VPC.
             # Therefore lambdas need some network interface permissions.
@@ -56,16 +61,13 @@ class RdsSingleUserPasswordRotation:
             # Lambda needs to call secrets manager to get secret value in order to update database password.
             aws_iam.PolicyStatement(
                 actions=[
-                    # "secretsmanager:DescribeSecret",
-                    # "secretsmanager:GetSecretValue",
-                    # "secretsmanager:PutSecretValue",
-                    # "secretsmanager:UpdateSecretVersionStage"
-                    "secretsmanager:*",
-                    "kms:*",
+                    "secretsmanager:DescribeSecret",
+                    "secretsmanager:GetSecretValue",
+                    "secretsmanager:PutSecretValue",
+                    "secretsmanager:UpdateSecretVersionStage"
                 ],
                 effect=aws_iam.Effect.ALLOW,
-                resources=['*'],
-                # resources = [secret.secret_arn]
+                resources=[secret.secret_arn]
         ),
             # Not exactly sure about this one.
             # Despite that, this policy does not impose any security risks.
@@ -84,11 +86,11 @@ class RdsSingleUserPasswordRotation:
                 # Therefore the lambda function should be able to get this value.
                 aws_iam.PolicyStatement(
                     actions=[
-                        'kms:GetSecretValue',
+                        'kms:GenerateDataKey',
                         'kms:Decrypt',
                     ],
                     effect=aws_iam.Effect.ALLOW,
-                    resources=[kms_key.key_arn]
+                    resources=[kms_key.key_arn],
                 )
             )
 
@@ -109,7 +111,7 @@ class RdsSingleUserPasswordRotation:
 
         # Create rotation lambda functions source code path.
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        path = os.path.join(dir_path, 'packages', self.LAMBDA_BACKEND_DEPLOYMENT_PACKAGE)
+        path = os.path.join(dir_path, self.LAMBDA_BACKEND_DEPLOYMENT_PACKAGE)
 
         # Create a lambda function responsible for rds password rotation.
         self.rotation_lambda_function = LambdaFunction(

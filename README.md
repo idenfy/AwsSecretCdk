@@ -52,25 +52,27 @@ console (UI). However it is notoriously difficult to create and manage
 secrets through CloudFormation. You need to create a lambda function, which 
 executes secret rotation, ensure correct lambda function permissions and
 security groups, correctly configure secrets themselves with correct templates, etc.
-All in all, it is really painful. This library tackles this problem. In a 
+This library tackles this problem. In a 
 nutshell, you just provide a database, for which the secret should be applied,
 and some other params. And that's it! You're good to go.
+
+One big note - this library can be used on *existing* databases.
 
 #### Examples
 
 Here are the examples on how to use this library with various scenarios.
 
-##### RDS Single user rotation secret example
+##### RDS (MySql and Aurora MySql compatible) Single user rotation
 
-To create a SSM Secret for an RDS database with 30 days rotation, create an
-`RdsSecret` instance.
+To create a SecretsManager Secret for an RDS database with 30 days rotation, create a
+`Secret` instance.
 
 ```python
 from aws_cdk.core import Stack
 from aws_cdk.aws_ec2 import Vpc
 from aws_cdk import aws_rds
-from aws_secret_cdk.rds_secret import RdsSecret
 from aws_secret_cdk.vpc_parameters import VPCParameters
+from aws_secret_cdk.aurora_mysql_single_user.secret import Secret
 
 class MyStack(Stack):
     def __init__(self, **kwargs):
@@ -83,7 +85,7 @@ class MyStack(Stack):
         self.database = aws_rds.CfnDBCluster(**kwargs)
         
         # Now simply create a secret with 30 day rotation.
-        self.rds_secret = RdsSecret(
+        self.rds_secret = Secret(
             stack=self,
             prefix='MyResourcesPrefix',
             vpc_parameters=VPCParameters(
