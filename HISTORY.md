@@ -1,5 +1,8 @@
 # Release history
 
+#### 5.1.0
+Force update to CDK 1.44.0.
+
 #### 5.0.0
 Restructure project having in mind that different types of rotations are 
 possible e.g. DynamoDB secret rotation, or RDS multi user secret rotation.
