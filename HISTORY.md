@@ -1,5 +1,8 @@
 # Release history
 
+#### 5.3.0
+Include MD files.
+
 #### 5.2.0
 Update to 1.60.0 and add upper dependency bound of 2.0.0.
 
