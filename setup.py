@@ -8,7 +8,7 @@ with open('HISTORY.md') as history_file:
 
 setup(
     name='aws_secret_cdk',
-    version='5.1.0',
+    version='5.2.0',
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     packages=find_packages(exclude=['venv', 'test']),
     description='Package to create a SecretsManager\'s secret with auto rotation.',
@@ -17,13 +17,13 @@ setup(
     include_package_data=True,
     install_requires=[
         # Aws Cdk dependencies.
-        'aws-cdk.core>=1.44.0,<1.50.0',
-        'aws-cdk.aws_iam>=1.44.0,<1.50.0',
-        'aws-cdk.aws_ec2>=1.44.0,<1.50.0',
-        'aws-cdk.aws_lambda>=1.44.0,<1.50.0',
-        'aws-cdk.aws_rds>=1.44.0,<1.50.0',
-        'aws-cdk.aws_secretsmanager>=1.44.0,<1.50.0',
-        'aws-cdk.aws_s3_deployment>=1.44.0,<1.50.0',
+        'aws-cdk.core>=1.60.0,<2.0.0',
+        'aws-cdk.aws_iam>=1.60.0,<2.0.0',
+        'aws-cdk.aws_ec2>=1.60.0,<2.0.0',
+        'aws-cdk.aws_lambda>=1.60.0,<2.0.0',
+        'aws-cdk.aws_rds>=1.60.0,<2.0.0',
+        'aws-cdk.aws_secretsmanager>=1.60.0,<2.0.0',
+        'aws-cdk.aws_s3_deployment>=1.60.0,<2.0.0',
 
         # Other dependencies.
         'aws-lambda>=2.1.2,<3.0.0'
